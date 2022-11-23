@@ -1,14 +1,66 @@
 [project]
-name = ""
-version = ""
-description = ""
+name = "Mastermind API"
+version = "0.0.1"
+description = "Mastermind is a logic board game from the 70s in which you have to correctly guess a random secret code in a determined number of guesses."
 authors = [
     {name = "Yeray Diaz", email = "diazrodriguezyeray@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "fastapi>=0.86.0",
+    "sqlalchemy>=1.4.43",
+    "psycopg2-binary>=2.9.5",
+    "uvicorn>=0.19.0",
+    "alembic>=1.8.1",
+    "typer>=0.6.1",
+    "python-dotenv>=0.21.0",
+    "python-dateutil>=2.8.2",
+    "requests>=2.28.1"
+]
 requires-python = ">=3.10"
 license = {text = "MIT"}
 
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
+
+
+[tool]
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=7.2.0",
+    "pre-commit>=2.20.0",
+    "pytest-cov>=4.0.0",
+    "isort>=5.10.1",
+]
+
+
+
+[tool.pdm.scripts]
+server = "uvicorn src.infrastructure.server.main:app --reload --host 0.0.0.0"
+cli = "python -m src.infrastructure.commands.main"
+make_migration = "alembic revision --autogenerate -m"
+migrate = "alembic upgrade head"
+test = "pytest -v"
+test_coverage = "pytest -v --cov=. "
+test_coverage_html = "pytest -v --cov=. --cov-report html "
+
+
+
+[tool.pytest.ini_options]
+testpaths =[
+    "src",
+]
+
+[tool.coverage.report]
+skip_empty = true
+include = [
+     "*/*"
+]
+[tool.coverage.run]
+branch = true
+
+omit = [
+    "__pypackages__/*",
+    "alembic/*",
+]

@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/PyCQA/pylint
+    rev: v2.15.5
+    hooks:
+    - id: pylint
+      exclude: ^server/
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.0
+    hooks:
+    - id: autopep8
+      exclude: ^server/
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        stages: [commit]
+        name: isort (python)
+        fail_fast: true
+  - repo: local
+    hooks:
+      - id: coverage
+        stages: [push]
+        name: coverage
+        language: system
+        entry: pdm run test_coverage
+        types: [python]
+        always_run: true
+        pass_filenames: false
