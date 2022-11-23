@@ -1,0 +1,11 @@
+__pypackages__/
+__pycache__/
+
+.vscode
+.pdm.toml
+*.py[cod]
+*$py.class
+
+.coverage
+htmlcov/
+.pytest_cache/
