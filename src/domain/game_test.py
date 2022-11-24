@@ -1,10 +1,6 @@
-from unittest.mock import MagicMock
-
 import pytest
-import requests
 
-from src.domain.game import Game, MaxTriesReachedException, GameColor
-from src.settings import get_settings
+from src.domain.game import Game, GameColor, MaxTriesReachedException
 
 
 class TestGame:
@@ -13,9 +9,8 @@ class TestGame:
     def instance(self) -> Game:
         instance = Game(
             1,
-            f'{GameColor.RED.value}{GameColor.GREEN.value}{GameColor.GREEN.value}{GameColor.BLUE.value}',
-            3,
-            0
+            GameColor.RED.value + GameColor.GREEN.value
+            + GameColor.GREEN.value + GameColor.BLUE.value
         )
 
         return instance
@@ -32,10 +27,11 @@ class TestGame:
 
     def test_RRRR_BYOB_should_return_0_0(self, instance: Game):
         expected_result = 0, 0
-        instance.code = f'{GameColor.RED.value}{GameColor.RED.value}{GameColor.RED.value}{GameColor.RED.value}'
+        instance.code = GameColor.RED.value * 4
 
         result = instance.check_guess(
-            f'{GameColor.BLUE.value}{GameColor.YELLOW.value}{GameColor.ORANGE.value}{GameColor.BLUE.value}'
+            GameColor.BLUE.value + GameColor.YELLOW.value
+            + GameColor.ORANGE.value + GameColor.BLUE.value
         )
 
         assert result.values() == expected_result
@@ -69,7 +65,7 @@ class TestGame:
         )
 
         assert result.values() == expected_result
-        
+
     def test_WBWB_BWBW_should_return_0_4(self, instance: Game):
         expected_result = 0, 4
         instance.code = f'{GameColor.WHITE.value}{GameColor.BLUE.value}{GameColor.WHITE.value}{GameColor.BLUE.value}'
@@ -79,7 +75,7 @@ class TestGame:
         )
 
         assert result.values() == expected_result
-    
+
     def test_OOOW_OWWW_should_return_2_0(self, instance: Game):
         expected_result = 2, 0
         instance.code = f'{GameColor.ORANGE.value}{GameColor.ORANGE.value}{GameColor.ORANGE.value}{GameColor.WHITE.value}'
@@ -89,10 +85,14 @@ class TestGame:
         )
 
         assert result.values() == expected_result
-        
-    
+
     def test_should_raise_max_tries_reached(self, instance: Game):
         instance.tries = instance.max_tries
-        
+
         with pytest.raises(MaxTriesReachedException):
             instance.check_guess('')
+
+    def test_should_mark_guessed_to_true(self, instance: Game):
+        instance.check_guess(instance.code)
+
+        assert instance.guessed is True
