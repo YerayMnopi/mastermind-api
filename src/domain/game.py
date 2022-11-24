@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Tuple
+from uuid import UUID
 
 
 class GameColor(Enum):
@@ -25,7 +26,7 @@ class Game:
     win_result = (4, 0)
 
     def __init__(self,
-                 identifier: int,
+                 identifier: UUID,
                  code: str,
                  max_tries: int = 3
                  ):
@@ -89,7 +90,7 @@ class GamesRepository(ABC):
     """
 
     @abstractmethod
-    def get(self) -> Game:
+    def get(self, identifier: UUID) -> Game:
         raise NotImplementedError()
 
     @abstractmethod
