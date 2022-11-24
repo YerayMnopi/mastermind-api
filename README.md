@@ -27,10 +27,6 @@ The proposed architecture is based on three critical components:
 - The api server, responsable for reading games from the db.
 
 
-## Scalability
-In order to handle huge workloads of users fetching events, I proppose the use of horizontal scaling. This would be serveral instances of the api server component, maybe orchestrated with kubernetes, or distributing the load with the help of a load balancer.
-
-
 ## Packege manager pdm
 This project is handled with [pdm](https://pdm.fming.dev/latest/#installation)
 

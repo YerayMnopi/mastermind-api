@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 from typing import Tuple
+
 
 class GameColor(Enum):
     RED = 'R'
@@ -32,23 +32,20 @@ class Game:
     """
     A mastermind game.
     """
-    identifier: int
-    code: str
-    tries: int
-    max_tries: int
-    create_date: datetime
-    modified_date: datetime
+    win_result = (4, 0)
 
     def __init__(self,
-        identifier: int,
-        code: str,
-        max_tries: int,
-        tries: int
-    ):
+                 identifier: int,
+                 code: str,
+                 max_tries: int = 3,
+                 tries: int = 0,
+                 guessed: bool = False
+                 ):
         self.identifier = identifier
         self.code = code
         self.max_tries = max_tries
         self.tries = tries
+        self.guessed = guessed
 
     def __repr__(self):
         return f'Game {self.identifier}'
@@ -74,6 +71,9 @@ class Game:
             if guess_value in remainings_codes:
                 result.white_peqs += 1
 
+        if result.values() == self.win_result:
+            self.guessed = True
+
         return result
 
 
@@ -89,5 +89,3 @@ class GamesRepository(ABC):
     @abstractmethod
     def add(self, game: Game):
         raise NotImplementedError()
-
-
