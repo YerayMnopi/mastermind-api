@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple
+from typing import List, Tuple
 
 
 class GameColor(Enum):
@@ -11,15 +10,6 @@ class GameColor(Enum):
     GREEN = 'G'
     WHITE = 'W'
     ORANGE = 'O'
-
-
-@dataclass
-class GuessResult:
-    black_peqs: int = 0
-    white_peqs: int = 0
-
-    def values(self) -> Tuple[int, int]:
-        return self.black_peqs, self.white_peqs
 
 
 class MaxTriesReachedException(Exception):
@@ -37,24 +27,35 @@ class Game:
     def __init__(self,
                  identifier: int,
                  code: str,
-                 max_tries: int = 3,
-                 tries: int = 0,
-                 guessed: bool = False
+                 max_tries: int = 3
                  ):
         self.identifier = identifier
         self.code = code
         self.max_tries = max_tries
-        self.tries = tries
-        self.guessed = guessed
+        self.tries = 0
+        self.guessed = False
 
     def __repr__(self):
         return f'Game {self.identifier}'
 
-    def check_guess(self, guess: str) -> GuessResult:
+    def check_guess(self, guess: str) -> Tuple[int, int]:
+        self.__check_tries()
+        black_peqs, remainings_codes, remaining_guess = self.__count_black_peqs(
+            guess)
+
+        white_peqs = self.__count_white_peqs(remaining_guess, remainings_codes)
+        result = (black_peqs, white_peqs)
+        self.__check_guessed(result)
+
+        return result
+
+    def __check_tries(self):
         if self.tries >= self.max_tries:
             raise MaxTriesReachedException()
         self.tries += 1
-        result = GuessResult()
+
+    def __count_black_peqs(self, guess: str) -> Tuple[int, List[str], List[str]]:
+        black_peqs = 0
         remainings_codes = list(self.code)
         remaining_guess = []
 
@@ -62,19 +63,24 @@ class Game:
             code_value = self.code[guess_index]
 
             if code_value == guess_value:
-                result.black_peqs += 1
+                black_peqs += 1
                 remainings_codes[guess_index] = None
             else:
                 remaining_guess.append(guess_value)
 
-        for guess_index, guess_value in enumerate(remaining_guess):
-            if guess_value in remainings_codes:
-                result.white_peqs += 1
+        return black_peqs, remainings_codes, remaining_guess
 
-        if result.values() == self.win_result:
-            self.guessed = True
+    def __count_white_peqs(self, guess: List[str], code: List[str]):
+        white_peqs = 0
 
-        return result
+        for guess_value in guess:
+            if guess_value in code:
+                white_peqs += 1
+
+        return white_peqs
+
+    def __check_guessed(self, result: Tuple[int, int]):
+        self.guessed = result == self.win_result
 
 
 class GamesRepository(ABC):
