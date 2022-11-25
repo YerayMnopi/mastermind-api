@@ -102,6 +102,10 @@ class GamesRepository(ABC):
     def add(self, game: Game):
         raise NotImplementedError
 
+    @abstractmethod
+    def update(self, game: Game):
+        raise NotImplementedError
+
 
 class GameUnitOfWork(ABC):
     games: GamesRepository
