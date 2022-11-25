@@ -1,6 +1,8 @@
 import pytest
 
-from src.domain.game import Game, GameColor, MaxTriesReachedException
+from .colors import GameColor
+from .exceptions import MaxTriesReachedException
+from .game import Game
 
 
 class TestGame:

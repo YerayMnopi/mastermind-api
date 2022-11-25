@@ -1,23 +1,9 @@
 import random
-from abc import ABC, abstractmethod
-from enum import Enum
 from typing import List, Optional, Tuple
 from uuid import UUID
 
-
-class GameColor(Enum):
-    RED = 'R'
-    BLUE = 'B'
-    YELLOW = 'Y'
-    GREEN = 'G'
-    WHITE = 'W'
-    ORANGE = 'O'
-
-
-class MaxTriesReachedException(Exception):
-    """
-    Raised when a game is not available anymore.
-    """
+from .colors import GameColor
+from .exceptions import MaxTriesReachedException
 
 
 class Game:
@@ -87,39 +73,3 @@ class Game:
 
     def __generate_code(self):
         return random.choices([item.value for item in GameColor], k=self.code_length)
-
-
-class GamesRepository(ABC):
-    """
-    All games data operations.
-    """
-
-    @abstractmethod
-    def get(self, identifier: UUID) -> Game:
-        raise NotImplementedError
-
-    @abstractmethod
-    def add(self, game: Game):
-        raise NotImplementedError
-
-    @abstractmethod
-    def update(self, game: Game):
-        raise NotImplementedError
-
-
-class GameUnitOfWork(ABC):
-    games: GamesRepository
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        self.rollback()
-
-    @abstractmethod
-    def commit(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def rollback(self):
-        raise NotImplementedError
