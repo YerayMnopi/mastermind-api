@@ -3,7 +3,7 @@ from uuid import uuid4
 from sqlalchemy import (Boolean, Column, DateTime, Integer, MetaData, String,
                         Table, create_engine)
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy.orm import Session, mapper, sessionmaker
 from sqlalchemy.sql import func
 
 from src.domain.game import Game
@@ -28,5 +28,5 @@ def start_mappers():
     mapper(Game, games)
 
 
-get_session = sessionmaker(bind=create_engine(
+get_session: Session = sessionmaker(bind=create_engine(
     get_settings().get_postgres_uri()))
