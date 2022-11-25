@@ -1,3 +1,4 @@
+import random
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Optional, Tuple
@@ -23,6 +24,7 @@ class Game:
     """
     A mastermind game.
     """
+    code_length = 4
     win_result = (4, 0)
 
     def __init__(self,
@@ -31,7 +33,7 @@ class Game:
                  max_tries: int = 3
                  ):
         self.identifier = identifier
-        self.code = code
+        self.code = code if code else self.__generate_code()
         self.max_tries = max_tries
         self.tries = 0
         self.guessed = False
@@ -82,6 +84,9 @@ class Game:
 
     def __check_guessed(self, result: Tuple[int, int]):
         self.guessed = result == self.win_result
+
+    def __generate_code(self):
+        return random.choices([item.value for item in GameColor], k=self.code_length)
 
 
 class GamesRepository(ABC):

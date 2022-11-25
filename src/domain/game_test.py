@@ -106,3 +106,8 @@ class TestGame:
         instance.check_guess(instance.code)
 
         assert instance.guessed is True
+
+    def test_should_generate_code(self):
+        instance = Game()
+
+        assert len(instance.code) == instance.code_length
