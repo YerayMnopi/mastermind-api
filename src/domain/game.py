@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from uuid import UUID
 
 
@@ -26,8 +26,8 @@ class Game:
     win_result = (4, 0)
 
     def __init__(self,
-                 identifier: UUID,
-                 code: str,
+                 identifier: Optional[UUID] = None,
+                 code: Optional[str] = None,
                  max_tries: int = 3
                  ):
         self.identifier = identifier
@@ -91,8 +91,26 @@ class GamesRepository(ABC):
 
     @abstractmethod
     def get(self, identifier: UUID) -> Game:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abstractmethod
     def add(self, game: Game):
-        raise NotImplementedError()
+        raise NotImplementedError
+
+
+class GameUnitOfWork(ABC):
+    games: GamesRepository
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.rollback()
+
+    @abstractmethod
+    def commit(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def rollback(self):
+        raise NotImplementedError
