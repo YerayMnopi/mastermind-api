@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+  # server:
+  #   image: mastermind_api
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   depends_on: 
+  #     - db
+  #   command: bash -c "
+  #     pdm run cli create-db &&
+  #     pdm run migrate &&
+  #     pdm run server
+  #     "
+volumes:
+  db:
+    driver: local

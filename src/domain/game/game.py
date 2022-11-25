@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 from typing import List, Optional, Tuple
 from uuid import UUID
 
@@ -12,15 +13,18 @@ class Game:
     """
     code_length = 4
     win_result = (4, 0)
+    default_max_tries = 3
+    date_created: datetime
+    date_modified: datetime
 
     def __init__(self,
                  identifier: Optional[UUID] = None,
                  code: Optional[str] = None,
-                 max_tries: int = 3
+                 max_tries: Optional[int] = None
                  ):
         self.identifier = identifier
         self.code = code if code else self.__generate_code()
-        self.max_tries = max_tries
+        self.max_tries = max_tries if max_tries else self.default_max_tries
         self.tries = 0
         self.guessed = False
 
