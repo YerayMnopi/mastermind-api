@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.domain.game import Game, GameUnitOfWork
+from src.domain.game import Game, GameUnitOfWork, Guess
 
 
 @dataclass
@@ -15,8 +15,17 @@ class GuessCodeHandler:
 
     def handle(self, request: GuessCodeRequest) -> Game:
         game = self.games_uow.games.get(request.identifier)
-        game.check_guess(request.guess)
+        black_peqs, white_peqs = game.check_guess(request.guess)
+        guess = Guess(
+            None,
+            game_id=game.identifier,
+            code=request.guess,
+            black_peqs=black_peqs,
+            white_peqs=white_peqs,
+            date_created=None
+        )
 
         with self.games_uow:
+            self.games_uow.games.add_guess(guess)
             self.games_uow.games.update(game)
             self.games_uow.commit()

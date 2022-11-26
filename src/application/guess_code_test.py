@@ -19,6 +19,8 @@ class TestGuessCodeHandler:
             spec=GamesRepository
         )
         self.game = MagicMock(spec=Game)
+        self.game.identifier = 'game_1'
+        self.game.check_guess.return_value = 4, 0
         self.games_uow.games.get.return_value = self.game
 
         return GuessCodeHandler(

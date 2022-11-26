@@ -4,7 +4,7 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import Session
 
-from src.domain.game import Game
+from src.domain.game import Game, Guess
 
 from .postgresql_games_repository import PostgresqlGamesRepository
 
@@ -27,6 +27,11 @@ class TestPostgresqlGamesRepository:
         game = Game()
         instance.add(game)
         self.session.add.assert_called_with(game)
+
+    def test_should_call_add_guess(self, instance: PostgresqlGamesRepository):
+        guess = MagicMock(spec=Guess)
+        instance.add_guess(guess)
+        self.session.add.assert_called_with(guess)
 
     def test_should_call_update(self, instance: PostgresqlGamesRepository):
         game = Game()

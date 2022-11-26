@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from uuid import UUID
 
 from .game import Game
+from .guess import Guess
 
 
 class GamesRepository(ABC):
@@ -15,6 +16,10 @@ class GamesRepository(ABC):
 
     @abstractmethod
     def add(self, game: Game):
+        raise NotImplementedError
+
+    @abstractmethod
+    def add_guess(self, guess: Guess):
         raise NotImplementedError
 
     @abstractmethod
