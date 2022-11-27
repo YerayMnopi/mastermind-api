@@ -13,3 +13,11 @@ def test_create():
 def test_get():
     response = client.get("/games/08e5bbc9-050e-432d-b7e7-48ceec926e24")
     assert response.status_code == 200
+
+
+def test_create_guess():
+    response = client.post(
+        "/games/08e5bbc9-050e-432d-b7e7-48ceec926e24/guess",
+        json={'code': 'RRRR'}
+    )
+    assert response.status_code == 201
