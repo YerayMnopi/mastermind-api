@@ -5,6 +5,7 @@ from uuid import UUID
 
 from .colors import GameColor
 from .exceptions import MaxTriesReachedException
+from .guess import Guess
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
     default_max_tries = 3
     date_created: datetime
     date_modified: datetime
+    guesses: List[Guess]
 
     def __init__(self,
                  identifier: Optional[UUID] = None,
@@ -76,4 +78,6 @@ class Game:
         self.guessed = result == self.win_result
 
     def __generate_code(self):
-        return random.choices([item.value for item in GameColor], k=self.code_length)
+        codes = random.choices(
+            [item.value for item in GameColor], k=self.code_length)
+        return ''.join(codes)

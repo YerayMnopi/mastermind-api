@@ -1,13 +1,9 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
 from src.domain.game import GameUnitOfWork
-from src.settings import get_settings
 
 from .postgresql_games_repository import PostgresqlGamesRepository
-
-get_session: Session = sessionmaker(bind=create_engine(
-    get_settings().get_postgres_uri()))
+from .session import get_session
 
 
 class PostgresGamesUnitOfWork(GameUnitOfWork):
