@@ -15,12 +15,12 @@ class TestIntegration:
 
     def test_create(self):
         response = client.post("/games", json={'max_tries': 9})
-        assert response.status_code == 201
         game_response = response.json()
         with self.uow:
             game = self.uow.games.get(game_response['identifier'])
             self.uow.games.session.delete(game)
             self.uow.commit()
+        assert response.status_code == 201
 
     def test_get(self):
         game = Game()
@@ -29,10 +29,9 @@ class TestIntegration:
             self.uow.commit()
 
             response = client.get(f"/games/{game.identifier}")
-            assert response.status_code == 200
-
             self.uow.games.session.delete(game)
             self.uow.commit()
+            assert response.status_code == 200
 
     def test_guess_win(self):
         game = Game()
@@ -43,11 +42,11 @@ class TestIntegration:
                 f"/games/{game.identifier}/guess",
                 json={'code': game.code}
             )
-            assert response.status_code == 201
             game_response = response.json()
-            assert game_response['guessed'] is True
             self.uow.games.session.delete(game)
             self.uow.commit()
+            assert response.status_code == 201
+            assert game_response['guessed'] is True
 
     def test_max_tries_reached(self):
         game = Game(
@@ -58,20 +57,20 @@ class TestIntegration:
         with self.uow:
             self.uow.games.add(game)
             self.uow.commit()
-            response = client.post(
+            response_1 = client.post(
                 f"/games/{game.identifier}/guess",
                 json={'code': 'BBBB'}
             )
-            assert response.status_code == 201
 
-            response = client.post(
+            response_2 = client.post(
                 f"/games/{game.identifier}/guess",
                 json={'code': 'GGGG'}
             )
-            assert response.status_code == 400
 
             self.uow.games.session.delete(game)
             self.uow.commit()
+            assert response_1.status_code == 201
+            assert response_2.status_code == 400
 
     def test_invalid_codes(self):
         game = Game(
@@ -86,7 +85,6 @@ class TestIntegration:
                 f"/games/{game.identifier}/guess",
                 json={'code': 'JKHL'}
             )
-            assert response.status_code == 400
-
             self.uow.games.session.delete(game)
             self.uow.commit()
+            assert response.status_code == 400
