@@ -3,7 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from src.application.guess_code import GuessCodeHandler, GuessCodeRequest
-from src.domain.game import Game, GamesRepository, GameUnitOfWork
+from src.domain.game import (Game, GamesRepository, GameUnitOfWork,
+                             InvalidGuessValuesException)
 
 
 class TestGuessCodeHandler:
@@ -29,6 +30,12 @@ class TestGuessCodeHandler:
 
     def test_create(self, instance: GuessCodeHandler):
         assert bool(instance) is True
+
+    def test_should_validate_input(self, instance: GuessCodeHandler):
+        request = GuessCodeRequest('game_1', 'HJKL')
+
+        with pytest.raises(InvalidGuessValuesException):
+            instance.handle(request)
 
     def test_should_get_game(self, instance: GuessCodeHandler):
         request = GuessCodeRequest('game_1', 'RGBB')

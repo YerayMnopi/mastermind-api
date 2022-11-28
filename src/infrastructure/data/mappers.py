@@ -36,6 +36,6 @@ guesses = Table(
 
 def start_mappers():
     mapper(Game, games, properties={
-        'guesses': relationship(Guess, backref='game')
+        'guesses': relationship(Guess, backref='game', cascade="all,delete", lazy="joined")
     })
     mapper(Guess, guesses)

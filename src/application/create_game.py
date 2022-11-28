@@ -19,4 +19,4 @@ class CreateGameHandler:
             self.games_uow.games.add(game)
             self.games_uow.commit()
 
-            return game
+        return game

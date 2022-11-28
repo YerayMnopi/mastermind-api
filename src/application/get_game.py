@@ -13,4 +13,5 @@ class GetGameHandler:
         self.games_repository = games_repository
 
     def handle(self, request: GetGameRequest) -> Game:
-        return self.games_repository.get(request.identifier)
+        game = self.games_repository.get(request.identifier)
+        return game

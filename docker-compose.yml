@@ -10,18 +10,20 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
-  # server:
-  #   image: mastermind_api
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   depends_on: 
-  #     - db
-  #   command: bash -c "
-  #     pdm run cli create-db &&
-  #     pdm run migrate &&
-  #     pdm run server
-  #     "
+  server:
+    image: mastermind_api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    depends_on: 
+      - db
+    command: bash -c "
+      pdm run cli &&
+      pdm run migrate &&
+      pdm run server
+      "
 volumes:
   db:
     driver: local
