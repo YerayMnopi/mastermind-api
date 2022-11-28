@@ -46,6 +46,7 @@ test = "pytest -v -m \"not integration\""
 test_e2e = "pytest -v -m \"integration\""
 test_coverage = "pytest -v --cov=. "
 test_coverage_html = "pytest -v --cov=. --cov-report html "
+generate_uml = "pyreverse -o png -p yourpackage ."
 
 
 
